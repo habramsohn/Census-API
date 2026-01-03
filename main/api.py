@@ -4,6 +4,26 @@ import json
 import itertools
 
 # Future improvements; all variable changes related to ancestry to include
+# REWRITE CODE FOR PYTHONICISM 
+## Nested logic -> dictionaries
+## Apply with vectorization (e.g. df.rename(columns=mapping, inplace = T))
+## Break into bespoke .py scripts and __main__.py file
+# FUTURE
+## Refine variable offerings to speed up API call
+## Build front-end visualization app
+## Rewrite client-side API call to request only variables relevant to user query
+
+# SCHEMA API 
+## Functions:
+### Variable declaration from JSON
+### Variable mutations
+### Variable exclusions
+### Z2/00 declaration
+### Accept user input ZIP Code
+### Accept user input years range
+### Pull years/DPs 
+### Combine pulled years/DPs
+### Replace variable API codes with variable labels
 
 def mutate_fun(year, var):
     pref = var.split("_")[0]
@@ -60,7 +80,7 @@ zipcode = input("zip: ")
 years = [year for year in range(2011,2024)]
 DPs = ["DP02","DP03","DP04","DP05"]
 results = []
-# 2023 variables
+# 2011 variables
 with open('variables.json', 'r') as file:
     variables = json.load(file)
 variables = variables["variables"]
@@ -68,7 +88,6 @@ vars = []
 for var in variables:
     if exclude_fun(var) == True:
         vars.append(var)
-
 
 for year in years:
     temp = {}
