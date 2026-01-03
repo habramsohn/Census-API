@@ -9,11 +9,13 @@ import itertools
 ## Apply with vectorization (e.g. df.rename(columns=mapping, inplace = T))
 ## Break into bespoke .py scripts and __main__.py file
 # FUTURE
+## Set up remote API call
 ## Refine variable offerings to speed up API call
 ## Build front-end visualization app
 ## Rewrite client-side API call to request only variables relevant to user query
 
 # SCHEMA API 
+## Add if __name__ == "main" scheme
 ## Functions:
 ### Variable declaration from JSON
 ### Variable mutations
