@@ -1,28 +1,79 @@
 import pandas as pd
 import requests
 import json
+import itertools
+
+# Future improvements; all variable changes related to ancestry to include
+
+def mutate_fun(year, var):
+    pref = var.split("_")[0]
+    iter = int(var.split("_")[1].split("E")[0])
+    dec = var.split("_")[1].split("E")[0]
+    # Removed: Sex ratios, over 16 and under 18 categories 
+    if year > 2016 and pref == "DP05":
+        if iter > 4 and iter <= 18:
+            mutate[var] = var.replace(str(dec), str(f"{int(dec)-1:04d}")) 
+            #print(f"{year}, >4, <18,{var}")
+        elif iter > 20 and iter <= 27: # and dec <= 20:
+            mutate[var] = var.replace(str(dec), str(f"{int(dec)-3:04d}")) 
+            #print(f"{year}, >20,{var}")
+        elif iter > 28 and iter <= 32:
+            mutate[var] = var.replace(str(dec), str(f"{int(dec)-4:04d}")) 
+            #print(f"{year}, >27,{var}")
+        elif iter > 32:
+            mutate[var] = var.replace(str(dec), str(f"{int(dec)-5:04d}")) 
+            #print(f"{year}, >31,{var}")
+    # Removed: Cohabiting stats
+    if year > 2018 and pref == "DP02":
+        if iter > 14 and iter <= 20:
+            mutate[var] = var.replace(str(dec), str(f"{int(dec)-1:04d}")) 
+            #print(mutate[var])
+        elif iter > 21 and iter <= 24:
+            mutate[var] = var.replace(str(dec), str(f"{int(dec)-2:04d}"))
+        elif iter > 24:
+            mutate[var] = var.replace(str(dec), str(f"{int(dec)-1:04d}"))
+    # Removed: Computer and internet access statistics
+    if year > 2019 and pref == "DP02":
+        if iter > 85:
+            mutate[var] = var.replace(str(dec), str(f"{int(dec)-2:04d}"))
+    if year > 2014 and pref == "DP04":
+        if iter > 24:
+            mutate[var] = var.replace(str(dec), str(f"{int(dec)-1:04d}"))
+    return mutate
+
+def exclude_fun(var):
+    # Removed highly specific household description
+    a = [f"DP02_{n:04d}E" for n in range(3,15)]
+    b = [f"DP05_{n:04d}E" for n in range(77,82)]
+    c = ["DP02_0023E"]
+    exclude = list(itertools.chain(a,c))
+    if len(var.split("_")) > 1 and all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0] and var not in exclude:
+        return True
+    else:
+        return False
 
 # Will need to pull all years
+#start = input("Start year: ")
+#end = input("End year: ")
 zipcode = input("zip: ")
 #2011-2023
-years = [year for year in range(2016,2018)]
+years = [year for year in range(2011,2024)]
 DPs = ["DP02","DP03","DP04","DP05"]
 results = []
+# 2023 variables
+with open('variables.json', 'r') as file:
+    variables = json.load(file)
+variables = variables["variables"]
 vars = []
-exclude = ["GEO_ID", "NAME", "ucgid"] #, "DP05_0020E", "DP05_0019E" "DP05_0028E", "DP05_0032E", "DP05_0004E"]
+for var in variables:
+    if exclude_fun(var) == True:
+        vars.append(var)
 
-# Two categories; variables added in subsequent years, and variables adjusted
-exclude_years = [
-    [],
-    []
-]
-# etc.
 
 for year in years:
-    if min(years) == 2011: # exclude variables added after min year
-        exclude.append(one)
-    
     temp = {}
+    mutate = {}
+    data = {}
     if year > 2020:
         x = "Z2"
     else:
@@ -32,37 +83,33 @@ for year in years:
         url = f"https://api.census.gov/data/{year}/acs/acs5/profile?get=group({DP})&ucgid=860{x}00US{zipcode}&key=915657d4de9518c7ed7dc042dd08050606fa1492"
         response = requests.get(url)
         for var, stat in zip(response.json()[0],response.json()[1]):
-            if var not in exclude and all(w not in var.split("_")[1] for w in ["M","P","A"]):
-                vars.append(var)
-            
             if var in vars:
-                if year == x:
-                    var = # var from 2011, etc.
-                if stat == -888888888:
-                    temp[var] = 0
+                mutate_fun(year, var)
+                if var in mutate:
+                    if float(stat) < 0:
+                        temp[mutate[var]] = 0
+                    else:
+                        temp[mutate[var]] = stat
                 else:
-                    temp[var] = stat
+                    if float(stat) < 0:
+                        temp[var] = 0
+                    else:
+                        temp[var] = stat
     df_temp = pd.DataFrame(temp, index = [year])
     results.append(df_temp)
+    print(f"Year {year} pulled")
 
-print(results)
+df = pd.concat(results, axis = 0)
 
-df = pd.concat(results, axis = 0, join = "inner")
+for v in variables.items():
+    label = v[1]["label"].split("!!",1) #.replace("!!",", ")
+    if len(label) > 1: 
+        label = label[1].replace("!!", ", ").lower()
+    for i in df.columns:
+        if v[0] == i:
+            df.rename(columns={i: label}, 
+                      inplace = True)
 
-#print(df)
-
-# with open('variables.json', 'r') as file:
-#     variables = json.load(file)
-# variables = variables["variables"]
-# for v in variables.items():
-#     label = v[1]["label"].split("!!",1) #.replace("!!",", ")
-#     if len(label) > 1: 
-#         label = label[1].replace("!!", ", ").lower()
-#     for i in df.columns:
-#         if v[0] == i:
-#             df.rename(columns={i: label}, 
-#                       inplace = True)
-
-#print(df)
+print(df)
 
 df.to_csv('test.csv')
