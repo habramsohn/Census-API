@@ -27,13 +27,12 @@ def mutate_fun(year, var):
             mutate[var] = var.replace(str(dec), str(f"{int(dec)-offset:04d}"))
 
 def exclude_fun(var):
-    # Removed highly specific household description
-    #a = [f"DP02_{n:04d}E" for n in range(3,15)]
-    #b = [f"DP05_{n:04d}E" for n in range(77,82)]
-    #c = ["DP02_0023E"]
-    #exclude = list(itertools.chain(a,b,c))
-    if len(var.split("_")) > 1 and all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0]:# and var not in exclude:
-        return True
+    cond_one = len(var.split("_")) > 1
+    #if len(var.split("_")) > 1 and all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0]:# and var not in exclude:
+    if cond_one:
+        cond_two = all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0]
+        if cond_two:
+            return True
     else:
         return False
 
@@ -48,15 +47,20 @@ def rename_fun(df, variables):
                 mapping[i] = label
     df.rename(columns=mapping, inplace=True)
 
-def main_api():
-    zipcode = input("Zip: ")
-    min_year = int(input("Start year:"))
-    max_year = int(input("End year: "))
-    years = list(range(min_year, max_year+1))
-
+def variables_fun():
     with open('variables.json', 'r') as file:
         variables = json.load(file)
     variables = variables["variables"]
+    return variables
+
+def main_api():
+    # Move to input.py
+    zipcode = input("Zip: ")
+    min_year = int(input("Start year: "))
+    max_year = int(input("End year: "))
+    years = list(range(min_year, max_year+1))
+
+    variables = variables_fun()
     vars = []
     [vars.append(var) for var in variables if exclude_fun(var) == True]
  
@@ -89,13 +93,28 @@ def main_api():
         print(f"Year {year} pulled")
     df = pd.concat(results, axis = 0)
     rename_fun(df, variables)
+    return df
+
+# Move to input.py
+def csv_fun(df):
     df.to_csv('test.csv')
 
 if __name__ == "__main__":
-    main_api()
+    df = main_api()
+    csv_fun(df)
+
+# csv_fun can be separated into a new script called when the user wants a table.
+
+# FINISH
+## Determine variables used for visualization
+## 
 
 # FUTURE
 ## Set up remote API call
+## User error catching 
 ## Refine variable offerings to speed up API call
 ## Build front-end visualization app
+### Start with biggest variables, go back and fix details in API call if wanted
 ## Rewrite client-side API call to request only variables relevant to user query
+
+# Input -> API -> wrangle -> visual
