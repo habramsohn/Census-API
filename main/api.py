@@ -5,7 +5,43 @@ import itertools
 
 results = []
 mutate = {}
-DPs = ["DP02","DP03","DP04","DP05"]
+
+def include_fun(var):
+    cond_one = len(var.split("_")) > 1
+    #if len(var.split("_")) > 1 and all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0]:# and var not in exclude:
+    if cond_one:
+        cond_two = all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0]
+        if cond_two:
+            return True
+    else:
+        return False
+
+def variables_fun():
+    with open('variables.json', 'r') as file:
+        variables = json.load(file)
+    variables = variables["variables"]
+    return variables
+
+def api_fun(year, zipcode, vars):
+    DPs = ["DP02","DP03","DP04","DP05"]
+    temp = {}
+    if year > 2020:
+        x = "Z2"
+    else:
+        x = "00"
+    for dp in DPs:
+        url = f"https://api.census.gov/data/{year}/acs/acs5/profile?get=group({dp})&ucgid=860{x}00US{zipcode}&key=915657d4de9518c7ed7dc042dd08050606fa1492"
+        temp = dp_fun(url, vars, year, temp)                                                                    
+    results.append(pd.DataFrame(temp, index = [year]))
+    
+def dp_fun(url, vars, year, temp):
+    response = requests.get(url)
+    for var, stat in zip(response.json()[0],response.json()[1]):
+        if var in vars:
+            mutate_fun(year, var)
+            key = mutate.get(var, var)
+            temp[key] = max(0, float(stat))
+    return temp
 
 def mutate_fun(year, var):
     pref = var.split("_")[0]
@@ -26,16 +62,6 @@ def mutate_fun(year, var):
         if year > rule[0] and pref == rule[1] and num > rule[2]:
             mutate[var] = var.replace(str(dec), str(f"{int(dec)-offset:04d}"))
 
-def exclude_fun(var):
-    cond_one = len(var.split("_")) > 1
-    #if len(var.split("_")) > 1 and all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0]:# and var not in exclude:
-    if cond_one:
-        cond_two = all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0]
-        if cond_two:
-            return True
-    else:
-        return False
-
 def rename_fun(df, variables):
     mapping = {}
     for var in variables.items():
@@ -47,50 +73,16 @@ def rename_fun(df, variables):
                 mapping[i] = label
     df.rename(columns=mapping, inplace=True)
 
-def variables_fun():
-    with open('variables.json', 'r') as file:
-        variables = json.load(file)
-    variables = variables["variables"]
-    return variables
-
-def main_api():
+def main_fun():
     # Move to input.py
     zipcode = input("Zip: ")
     min_year = int(input("Start year: "))
     max_year = int(input("End year: "))
     years = list(range(min_year, max_year+1))
-
     variables = variables_fun()
     vars = []
-    [vars.append(var) for var in variables if exclude_fun(var) == True]
- 
-    for year in years:
-        temp = {}
-        if year > 2020:
-            x = "Z2"
-        else:
-            x = "00"
-        for DP in DPs:
-            # REMOVE KEY BEFORE PUBLISH
-            url = f"https://api.census.gov/data/{year}/acs/acs5/profile?get=group({DP})&ucgid=860{x}00US{zipcode}&key=915657d4de9518c7ed7dc042dd08050606fa1492"
-            response = requests.get(url)
-
-            for var, stat in zip(response.json()[0],response.json()[1]):
-                if var in vars:
-                    mutate_fun(year, var)
-                    if var in mutate:
-                        if float(stat) < 0:
-                            temp[mutate[var]] = 0
-                        else:
-                            temp[mutate[var]] = stat
-                    else:
-                        if float(stat) < 0:
-                            temp[var] = 0
-                        else:
-                            temp[var] = stat
-        df_temp = pd.DataFrame(temp, index = [year])
-        results.append(df_temp)
-        print(f"Year {year} pulled")
+    [vars.append(var) for var in variables if include_fun(var) == True]
+    [api_fun(year, zipcode, vars) for year in years]
     df = pd.concat(results, axis = 0)
     rename_fun(df, variables)
     return df
@@ -100,7 +92,7 @@ def csv_fun(df):
     df.to_csv('test.csv')
 
 if __name__ == "__main__":
-    df = main_api()
+    df = main_fun()
     csv_fun(df)
 
 # csv_fun can be separated into a new script called when the user wants a table.
