@@ -1,2 +1,1 @@
-# use hard cvs to test
-# script to wrangle dataframe down to requested variables (from input.py)
+# Wrangle data down to interesting variables and eventually user-requested ones

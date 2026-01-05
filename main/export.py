@@ -1,4 +1,4 @@
-# script to export to csv if requested (from input.py)
+# Export pulled data to CSV if requested
 
 def export(check_bool, df):
     if check_bool == True:

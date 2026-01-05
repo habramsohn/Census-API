@@ -11,6 +11,7 @@ def user_input():
     # Robustness checks
     return zip, min_year, max_year
 
+# Update to boolean buttons on front-end
 def csv_check():
     csv_check = input("CSV? ")
     if csv_check == "Yes":
