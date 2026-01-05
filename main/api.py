@@ -8,7 +8,6 @@ mutate = {}
 
 def include_fun(var):
     cond_one = len(var.split("_")) > 1
-    #if len(var.split("_")) > 1 and all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0]:# and var not in exclude:
     if cond_one:
         cond_two = all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0]
         if cond_two:
@@ -36,7 +35,8 @@ def api_fun(year, zipcode, vars):
     
 def dp_fun(url, vars, year, temp):
     response = requests.get(url)
-    for var, stat in zip(response.json()[0],response.json()[1]):
+    zipped = zip(response.json()[0],response.json()[1])
+    for var, stat in zipped:
         if var in vars:
             mutate_fun(year, var)
             key = mutate.get(var, var)
@@ -63,37 +63,21 @@ def mutate_fun(year, var):
             mutate[var] = var.replace(str(dec), str(f"{int(dec)-offset:04d}"))
 
 def rename_fun(df, variables):
-    mapping = {}
-    for var in variables.items():
-        label = var[1]["label"].split("!!",1) #.replace("!!",", ")
-        if len(label) > 1: 
-            label = label[1].replace("!!", ", ").lower()
-        for i in df.columns:
-            if var[0] == i:
-                mapping[i] = label
+    mapping = {name: var["label"].split("!!",1)[1].lower().replace("!!",", ") for name, var in variables.items() if name in df.columns}
     df.rename(columns=mapping, inplace=True)
 
-def main_fun():
-    # Move to input.py
-    zipcode = input("Zip: ")
-    min_year = int(input("Start year: "))
-    max_year = int(input("End year: "))
+def main_fun(zip, min_year, max_year):
     years = list(range(min_year, max_year+1))
     variables = variables_fun()
     vars = []
     [vars.append(var) for var in variables if include_fun(var) == True]
-    [api_fun(year, zipcode, vars) for year in years]
+    [api_fun(year, zip, vars) for year in years]
     df = pd.concat(results, axis = 0)
     rename_fun(df, variables)
     return df
 
-# Move to input.py
-def csv_fun(df):
-    df.to_csv('test.csv')
-
 if __name__ == "__main__":
-    df = main_fun()
-    csv_fun(df)
+    main_fun()
 
 # csv_fun can be separated into a new script called when the user wants a table.
 
