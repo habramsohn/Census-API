@@ -1,17 +1,14 @@
-# User input to define:
-## Zip code (to api)
-## Year range (to api)
-## Desired variables (to wrangling.py)
-## export cvs? (to export.py)
+# Rewrite to accomodate JSON GET requests when known
 
-def user_input():
+# Get user wants
+def basic_input():
     zip = input("Zip: ")
     min_year = int(input("Start year: "))
     max_year = int(input("End year: "))
     # Robustness checks
     return zip, min_year, max_year
 
-# Update to boolean buttons on front-end
+# Discover if user wants CSV or not
 def csv_check():
     csv_check = input("CSV? ")
     if csv_check == "Yes":
@@ -19,6 +16,11 @@ def csv_check():
     else:
         csv_bool = False
     return csv_bool
+
+# Define desired variable 
+def variable_input(arg):
+    print(arg)
+    return arg 
 
 if __name__ == "__main__":
     user_input()

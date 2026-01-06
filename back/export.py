@@ -1,6 +1,7 @@
 # Export pulled data to CSV if requested
 
-def export(check_bool, df):
+# Change to input df from wrangler
+def export(check_bool, w_df):
     if check_bool == True:
         df.to_csv('test.csv')
 
