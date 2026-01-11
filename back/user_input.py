@@ -19,7 +19,6 @@ def csv_check():
 
 # Define desired variable 
 def variable_input(arg):
-    print(arg)
     return arg 
 
 if __name__ == "__main__":

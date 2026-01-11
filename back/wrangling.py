@@ -1,6 +1,5 @@
-# Wrangle data down to interesting variables and eventually user-requested ones
-
-def selection(df, arg):
+# Reduce df to user-selected variable groups
+def selection(arg):
     options = {
          'housing': ["households by type, total households", 
             "households by type, average household size",	
@@ -26,8 +25,11 @@ def selection(df, arg):
             "occupation, natural resources, construction, and maintenance occupations",
             "occupation, production, transportation, and material moving occupations",
             "industry, agriculture, forestry, fishing and hunting, and mining",
-            "industry, construction	industry, manufacturing	industry, wholesale trade",
-            "industry, retail trade	industry, transportation and warehousing, and utilities",
+            "industry, construction",
+            "industry, manufacturing",
+            "industry, wholesale trade",
+            "industry, retail trade",	
+            "industry, transportation and warehousing, and utilities",
             "industry, information",
             "industry, finance and insurance, and real estate and rental and leasing",
             "industry, professional, scientific, and management, and administrative and waste management services",
@@ -38,22 +40,12 @@ def selection(df, arg):
             "class of worker, private wage and salary workers",
             "class of worker, government workers",
             "class of worker, self-employed in own not incorporated business workers"],
-        'economic': ["income and benefits (in 2011 inflation-adjusted dollars), less than $10,000",	
-            "income and benefits (in 2011 inflation-adjusted dollars), $10,000 to $14,999",
-            "income and benefits (in 2011 inflation-adjusted dollars), $15,000 to $24,999",
-            "income and benefits (in 2011 inflation-adjusted dollars), $25,000 to $34,999",
-            "income and benefits (in 2011 inflation-adjusted dollars), $35,000 to $49,999",
-            "income and benefits (in 2011 inflation-adjusted dollars), $50,000 to $74,999",
-            "income and benefits (in 2011 inflation-adjusted dollars), $75,000 to $99,999",
-            "income and benefits (in 2011 inflation-adjusted dollars), $100,000 to $149,999",
-            "income and benefits (in 2011 inflation-adjusted dollars), $150,000 to $199,999",
-            "income and benefits (in 2011 inflation-adjusted dollars), $200,000 or more",
-            "income and benefits (in 2011 inflation-adjusted dollars), median household income (dollars)",
+        'economic': ["income and benefits (in 2011 inflation-adjusted dollars), median household income (dollars)",
             "income and benefits (in 2011 inflation-adjusted dollars), mean household income (dollars)",
             "income and benefits (in 2011 inflation-adjusted dollars), median earnings for workers (dollars)",
             "housing occupancy, total housing units",	
             "housing occupancy, occupied housing units",
-            "housing occupancy, vacant housing units"	
+            "housing occupancy, vacant housing units",	
             "rooms, median rooms",
             "vehicles available, no vehicles available",
             "vehicles available, 1 vehicle available",
@@ -67,8 +59,7 @@ def selection(df, arg):
             "value, $300,000 to $499,999",
             "value, $500,000 to $999,999",
             "value, $1,000,000 or more",
-            "value, median (dollars)"
-],
+            "value, median (dollars)"],
         'demographic': ["sex and age, male",
         	"sex and age, female",
             "sex and age, under 5 years",
@@ -86,11 +77,17 @@ def selection(df, arg):
             "sex and age, 85 years and over",
             "sex and age, median age (years)"]}
     selected = options[arg]
-    print(selected)
     return selected
 
-def wrun():
-    selection(df, 'housing')
+def wrangle(df, selected):
+    new_df = df[selected]
+    new_df.index.name = "year"
+    return new_df
+
+def wrun(df, arg):
+    selected = selection(arg)
+    new_df = wrangle(df, selected)
+    return new_df
 
 if __name__ == "__main__":
     wrun()
