@@ -14,15 +14,13 @@ def execute():
     check_bool = csv_check()
     # API
     df = main_fun(zipcode, years, api)
-    # fix to only export all wrangled variables
-    export(check_bool, df)
     repeat = "Yes"
     while repeat == "Yes":
         #temp
         arg = test()
         variable_input(arg)
         #Wrangle
-        new_df = wrun(df, arg)
+        new_df, export_df = wrun(df, arg)
         # exports products
         try:
             visualize(arg, new_df, year_len)
@@ -30,10 +28,7 @@ def execute():
             print(e)
             pass
         repeat = input("repeat? ")
+    export(check_bool, export_df)
 
 if __name__ == "__main__":
     execute()
-
-# Zip, year range, csv -> user_input -> api ->  export (if yest) -> user -> 
-# selected variable -> user_input -> wrangling -> visualization -> user
-# Start with aggregate information, expand submenus later if desired

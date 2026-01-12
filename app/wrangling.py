@@ -58,17 +58,19 @@ def selection(arg):
             "sex and age, 75 to 84 years",
             "sex and age, 85 years and over"]}
     selected = options[arg]
-    return selected
+    csv = list(i for l in options.values() for i in l)
+    return selected, csv
 
-def wrangle(df, selected):
+def wrangle(df, selected, csv):
     new_df = df[selected]
     new_df.index.name = "year"
-    return new_df
+    export_df = df[csv]
+    return new_df, export
 
 def wrun(df, arg):
-    selected = selection(arg)
-    new_df = wrangle(df, selected)
-    return new_df
+    selected, csv = selection(arg)
+    new_df, export_df = wrangle(df, selected, csv)
+    return new_df, export_df
 
 if __name__ == "__main__":
     wrun()

@@ -1,6 +1,6 @@
-def export(check_bool, df):
+def export(check_bool, export_df):
     if check_bool == True:
-        df.to_csv(f'export.csv')
+        export_df.to_csv(f'export.csv')
 
 if __name__ == "__main__":
-    export(df)
+    export(export_df)
