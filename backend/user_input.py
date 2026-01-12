@@ -20,8 +20,9 @@ def csv_check():
     return csv_bool
 
 # Define desired variable 
-def variable_input(arg):
-    return arg 
+def variable_input():
+    arg = input("variable: ")
+    return arg
 
 if __name__ == "__main__":
     user_input()

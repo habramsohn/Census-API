@@ -3,7 +3,6 @@ from export import export
 from user_input import basic_input, csv_check, variable_input
 from visual import visualize
 from wrangling import wrun
-from test import test
 import os
 
 api = os.environ.get('API_KEY')
@@ -16,17 +15,9 @@ def execute():
     df = main_fun(zipcode, years, api)
     repeat = "Yes"
     while repeat == "Yes":
-        #temp
-        arg = test()
-        variable_input(arg)
-        #Wrangle
+        arg = variable_input()
         new_df, export_df = wrun(df, arg)
-        # exports products
-        try:
-            visualize(arg, new_df, year_len)
-        except Exception as e:
-            print(e)
-            pass
+        visualize(arg, new_df, year_len)
         repeat = input("repeat? ")
     export(check_bool, export_df)
 
