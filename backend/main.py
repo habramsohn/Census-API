@@ -6,7 +6,7 @@ from wrangling import wrun
 from test import test
 import os
 
-api = os.environ.get('API')
+api = os.environ.get('API_KEY')
 
 def execute():
     # User input - Get requested zip, year range, and desire for CSV export
