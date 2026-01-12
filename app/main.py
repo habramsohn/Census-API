@@ -5,8 +5,8 @@ from visual import visualize
 from wrangling import wrun
 from test import test
 import os
-api = "915657d4de9518c7ed7dc042dd08050606fa1492"
-#api = os.environ.get('API')
+
+api = os.environ.get('API')
 
 def execute():
     # User input - Get requested zip, year range, and desire for CSV export
