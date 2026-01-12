@@ -1,38 +1,17 @@
-# start with hard cvs to test
-# script to present requested visualizations
-# time series, geographic ancestry, etc.
-# These will be sent back to front-end
-
 import plotly.express as px
 import pandas as pd
 
 def line(new_df, var, yaxis, title = None):
     if title == None:
         title = yaxis
-    plot = px.line(
-        new_df, x = new_df.index, y = var,
-        title = f"{title} per Year",
-        markers = True)
-    plot.update_traces(
-        name = yaxis, showlegend = True)
-    plot.update_layout(
-        xaxis_title="Year",
-        yaxis_title=f"{yaxis}",
-        xaxis = dict(
-            tickmode='linear', 
-            gridcolor='lightgray',
-            dtick=1),
-        yaxis = dict(
-            gridcolor='lightgray'),
-        yaxis_autorange=True,       
-        plot_bgcolor='white')
+    plot = px.line(new_df, x = new_df.index, y = var, title = f"{title} per Year", markers = True)
+    plot.update_traces(name = yaxis, showlegend = True)
+    plot.update_layout(xaxis_title = "Year", yaxis_title = f"{title}", xaxis = dict(tickmode = 'linear', gridcolor = 'lightgray', dtick = 1),
+        yaxis = dict(gridcolor = 'lightgray'), yaxis_autorange = True, plot_bgcolor='white')
     return plot
 
 def new_line(plot, new_df, var, yaxis):
-    plot.add_scatter(
-        x = new_df.index, y = new_df[var], 
-        mode = 'lines+markers',
-        name = yaxis)
+    plot.add_scatter(x = new_df.index, y = new_df[var], mode = 'lines+markers', name = yaxis)
     plot.update_layout(yaxis_autorange=True)
     return plot
 
@@ -40,23 +19,9 @@ def bar(new_df, var, yaxis, title = None):
     if title == None:
         title = yaxis
     year = new_df.index[0]
-    plot = px.bar(
-        data_frame=new_df,
-        x=new_df.index,
-        y=var,
-        title = f"{title} in {year}")
-    plot.update_traces(
-        width=0.4, 
-        opacity=0.8,
-        showlegend=True,
-        name = yaxis)
-    plot.update_layout(
-        xaxis=dict(
-            type='category',
-            tickmode='array'),
-        yaxis_title=title,
-        xaxis_title="Year",   
-        barmode="group")
+    plot = px.bar(data_frame = new_df, x = new_df.index, y = var, title = f"{title} in {year}")
+    plot.update_traces(width = 0.4, opacity = 0.8, showlegend = True, name = yaxis)
+    plot.update_layout(xaxis = dict(type = 'category', tickmode = 'array'), yaxis_title = title, xaxis_title = "Year", barmode = "group")
     return plot
 
 def new_bar(plot, new_df, var, yaxis):
@@ -66,7 +31,7 @@ def new_bar(plot, new_df, var, yaxis):
     return plot
 
 def visualize(arg, new_df, year_len): 
-    # List of variables for plots
+
     data = {
         "housing": [{"var": "households by type, total households", "yaxis": "Total Households"},
                     {"var": "households by type, average family size", "yaxis": "Average Family Size"},
@@ -84,11 +49,7 @@ def visualize(arg, new_df, year_len):
         "language": [{"var": "language spoken at home, english only", "yaxis": "Only English", "title": "Language Spoken at Home"},
                     {"var": "language spoken at home, language other than english", "yaxis": "Other than English"}],
 
-        "employment": [{"var": "employment status, in labor force, civilian labor force, employed", "yaxis": "Employed", "title": "Employment"},
-        	    {"var": "employment status, in labor force, civilian labor force, unemployed", "yaxis": "Unemployed"},
-                {"var": "employment status, not in labor force", "yaxis": "Not seeking work"}],
-
-        "occupation": [{"var": "occupation, management, business, science, and arts occupations", "yaxis": "Business, Science, and Art"},
+        "occupation": [{"var": "occupation, management, business, science, and arts occupations", "yaxis": "Business, Science, and Art", "title": "Occupation"},
                 {"var": "occupation, service occupations", "yaxis": "Customer Service"},
                 {"var": "occupation, sales and office occupations", "yaxis": "Sales and Office"},
                 {"var": "occupation, natural resources, construction, and maintenance occupations", "yaxis": "Construction, Maintenance, and Natural Resources"},
@@ -122,10 +83,7 @@ def visualize(arg, new_df, year_len):
                 {"var": "value, $300,000 to $499,999", "yaxis": "$300-499,999"},
                 {"var": "value, $500,000 to $999,999", "yaxis": "$500-999,999"},
                 {"var": "value, $1,000,000 or more", "yaxis": ">$1,000,000"}],
-        
-        "gender": [{"var": "sex and age, male", "yaxis": "Male", "title": "Sex"},
-                {"var": "sex and age, female", "yaxis": "Female"}],
-
+                
         "age": [{"var": "sex and age, under 5 years", "yaxis": "<5", "title": "Age in Years"},
                 {"var": "sex and age, 5 to 9 years", "yaxis": "5-9"},
                 {"var": "sex and age, 10 to 14 years", "yaxis": "10-14"},
@@ -142,21 +100,20 @@ def visualize(arg, new_df, year_len):
     }
 
     singles = ["housing"]
-    collated = ["education", "origin", "language", "employment", "occupation", "industry", "income", "vacancy",
-                "house_value", "gender", "age"]
+    collated = ["education", "origin", "language", "employment", "occupation", "industry", "income", "vacancy", "house_value", "gender", "age"]
 
     if year_len > 1:
         if arg in singles:
             for i in data[arg]:
-                var = i["var"]
-                yaxis = i["yaxis"]
+                var = i.get("var", None)
+                yaxis = i.get("yaxis", None)
                 title = i.get("title", None)
                 plot = line(new_df, var, yaxis, title)
                 plot.show()
         elif arg in collated:
             for i in data[arg]:
-                var = i["var"]
-                yaxis = i["yaxis"]
+                var = i.get("var", None)
+                yaxis = i.get("yaxis", None)
                 title = i.get("title", None)
                 if title != None:
                     plot = line(new_df, var, yaxis, title)
@@ -166,15 +123,15 @@ def visualize(arg, new_df, year_len):
     else:
         if arg in singles:
             for i in data[arg]:
-                var = i["var"]
-                yaxis = i["yaxis"]
+                var = i.get("var", None)
+                yaxis = i.get("yaxis", None)
                 title = i.get("title", None)
                 plot = bar(new_df, var, yaxis)
                 plot.show()
         elif arg in collated:
             for i in data[arg]:
-                var = i["var"]
-                yaxis = i["yaxis"]
+                var = i.get("var", None)
+                yaxis = i.get("yaxis", None)
                 title = i.get("title", None)
                 if title != None:
                     plot = bar(new_df, var, yaxis, title)
