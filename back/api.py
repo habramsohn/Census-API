@@ -21,7 +21,7 @@ def variables_fun():
     variables = variables["variables"]
     return variables
 
-def api_fun(year, zip, vars, api):
+def api_fun(year, zipcode, vars, api):
     DPs = ["DP02","DP03","DP04","DP05"]
     temp = {}
     if year > 2020:
@@ -29,7 +29,7 @@ def api_fun(year, zip, vars, api):
     else:
         x = "00"
     for dp in DPs:
-        url = f"https://api.census.gov/data/{year}/acs/acs5/profile?get=group({dp})&ucgid=860{x}00US{zip}&key={api}"
+        url = f"https://api.census.gov/data/{year}/acs/acs5/profile?get=group({dp})&ucgid=860{x}00US{zipcode}&key={api}"
         temp = dp_fun(url, vars, year, temp)                                                                    
     results.append(pd.DataFrame(temp, index = [year]))
     print(f"{year} complete!")
@@ -67,12 +67,11 @@ def rename_fun(df, variables):
     mapping = {name: var["label"].split("!!",1)[1].lower().replace("!!",", ") for name, var in variables.items() if name in df.columns}
     df.rename(columns=mapping, inplace=True)
 
-def main_fun(zip, min_year, max_year, api):
-    years = list(range(min_year, max_year+1))
+def main_fun(zipcode, years, api):
     variables = variables_fun()
     vars = []
     [vars.append(var) for var in variables if include_fun(var) == True]
-    [api_fun(year, zip, vars, api) for year in years]
+    [api_fun(year, zipcode, vars, api) for year in years]
     df = pd.concat(results, axis = 0)
     rename_fun(df, variables)
     return df

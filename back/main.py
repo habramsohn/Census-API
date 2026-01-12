@@ -10,10 +10,10 @@ api = "915657d4de9518c7ed7dc042dd08050606fa1492"
 
 def execute():
     # User input - Get requested zip, year range, and desire for CSV export
-    zip, min_year, max_year = basic_input()
+    zipcode, years, year_len = basic_input()
     check_bool = csv_check()
     # API
-    df = main_fun(zip, min_year, max_year, api)
+    df = main_fun(zipcode, years, api)
     # fix to only export all wrangled variables
     export(check_bool, df)
     repeat = "Yes"
@@ -25,7 +25,7 @@ def execute():
         new_df = wrun(df, arg)
         # exports products
         try:
-            visualize(arg, new_df)
+            visualize(arg, new_df, year_len)
         except Exception as e:
             print(e)
             pass

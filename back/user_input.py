@@ -2,11 +2,13 @@
 
 # Get user wants
 def basic_input():
-    zip = input("Zip: ")
+    zipcode = input("Zip: ")
     min_year = int(input("Start year: "))
     max_year = int(input("End year: "))
+    years = list(range(min_year, max_year+1))
+    year_len = len(years)
     # Robustness checks
-    return zip, min_year, max_year
+    return zipcode, years, year_len
 
 # Discover if user wants CSV or not
 def csv_check():
