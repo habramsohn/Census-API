@@ -1,10 +1,10 @@
 # Rewrite to accomodate JSON GET requests when known
 
 # Get user wants
-def basic_input():
-    zipcode = input("Zip: ")
-    min_year = int(input("Start year: "))
-    max_year = int(input("End year: "))
+def basic_input(zipcode, min_year, max_year):
+    zipcode = zipcode
+    min_year = min_year
+    max_year = max_year
     years = list(range(min_year, max_year+1))
     year_len = len(years)
     # Robustness checks
