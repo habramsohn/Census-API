@@ -65,7 +65,7 @@ def wrangle(df, selected, csv):
     new_df = df[selected]
     new_df.index.name = "year"
     export_df = df[csv]
-    return new_df, export
+    return new_df, export_df
 
 def wrun(df, arg):
     selected, csv = selection(arg)

@@ -109,7 +109,7 @@ def visualize(arg, new_df, year_len):
                 yaxis = i.get("yaxis", None)
                 title = i.get("title", None)
                 plot = line(new_df, var, yaxis, title)
-                plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn')
+                plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
         elif arg in collated:
             for i in data[arg]:
                 var = i.get("var", None)
@@ -119,7 +119,7 @@ def visualize(arg, new_df, year_len):
                     plot = line(new_df, var, yaxis, title)
                 else:
                     plot = new_line(plot, new_df, var, yaxis)
-            plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn')
+            plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
     else:
         if arg in singles:
             for i in data[arg]:
@@ -127,7 +127,7 @@ def visualize(arg, new_df, year_len):
                 yaxis = i.get("yaxis", None)
                 title = i.get("title", None)
                 plot = bar(new_df, var, yaxis)
-                plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn')
+                plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
         elif arg in collated:
             for i in data[arg]:
                 var = i.get("var", None)
@@ -137,7 +137,7 @@ def visualize(arg, new_df, year_len):
                     plot = bar(new_df, var, yaxis, title)
                 else: 
                     plot = new_bar(plot, new_df, var, yaxis)
-            plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn')
+            plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
     return plot_html
 
 if __name__ == "__main__":

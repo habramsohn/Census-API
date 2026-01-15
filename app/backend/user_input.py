@@ -12,7 +12,7 @@ def basic_input(zipcode, min_year, max_year):
 
 # Discover if user wants CSV or not
 def csv_check():
-    csv_check = input("CSV? ")
+    csv_check = "no - temp"
     if csv_check == "Yes":
         csv_bool = True
     else:
@@ -21,7 +21,8 @@ def csv_check():
 
 # Define desired variable 
 def variable_input():
-    arg = input("variable: ")
+    # temp
+    arg = "income"
     return arg
 
 if __name__ == "__main__":
