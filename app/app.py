@@ -6,8 +6,7 @@ import uvicorn
 from backend import main
 from functools import lru_cache
 
-#api_key = os.environ.get('API_KEY')
-api_key = "915657d4de9518c7ed7dc042dd08050606fa1492"
+api_key = os.environ.get('API_KEY')
 
 app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
@@ -33,7 +32,7 @@ async def viz(zipcode: str, minYear: int, maxYear: int, variable: str):
     return HTMLResponse(content=plot_html)
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=False)
 
 # Fix housing value >million bug
 # Move variable and CSV selection to page
