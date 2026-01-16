@@ -30,7 +30,7 @@ def new_bar(plot, new_df, var, yaxis):
     plot.update_traces(width = None)
     return plot
 
-def visualize(arg, new_df, year_len): 
+def visualize(arg, year_len, new_df): 
 
     data = {
         "housing": [{"var": "households by type, total households", "yaxis": "Total Households"},

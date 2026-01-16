@@ -17,7 +17,20 @@
     <label for="zipcode">Zipcode: </label>
     <input type="text" id="zipcode" name="zipcode"/>      
     <div id="slider" name="slider"></div> 
-    <button id="submit" type="submit">Submit</button>
+    <button id="zipyear" type="submit">Submit Zipyear</button>
+    <select name="vars" id="vars">
+      <option value="housing">Housing</option>
+      <option value="education">Education</option>
+      <option value="origin">Origin</option>
+      <option value="language">Language</option>
+      <option value="occupation">Occupation</option>
+      <option value="industry">Industry</option>
+      <option value="income">Income</option>
+      <option value="vacancy">Vacancy</option>
+      <option value="house_value">House Value</option>
+      <option value="age">Age</option>
+    </select>
+    <button id="viz" type="button">viz</button>
 
   <script src="{{ url_for('static', path='/slider.js') }}"></script>
   <script src="{{ url_for('static', path='/input.js') }}"></script>

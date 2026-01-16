@@ -1,3 +1,16 @@
 #slider {
     margin: 50px
 }
+
+#vars {
+    position: relative;
+    z-index: 1000 !important;
+}
+
+.button {
+    margin: 100
+}
+
+#viz, #zipyear {
+    display: block
+}

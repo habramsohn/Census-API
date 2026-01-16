@@ -19,12 +19,6 @@ def csv_check():
         csv_bool = False
     return csv_bool
 
-# Define desired variable 
-def variable_input():
-    # temp
-    arg = "income"
-    return arg
-
 if __name__ == "__main__":
     user_input()
     csv_check()

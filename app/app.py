@@ -3,8 +3,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import uvicorn
-from markupsafe import Markup
 from backend import main
+from functools import lru_cache
 
 #api_key = os.environ.get('API_KEY')
 api_key = "915657d4de9518c7ed7dc042dd08050606fa1492"
@@ -18,15 +18,26 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 async def get_landing(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.get('/zip/{zipcode}/years/{minYear}-{maxYear}')
-async def zipyear(zipcode: str | None, minYear: int | None, maxYear: int | None):
-    plot_html = main.execute(api_key, zipcode, minYear, maxYear)
+@lru_cache(maxsize=32)
+def pull_data(zipcode: str, minYear: int, maxYear: int):
+    return main.execute_df(api_key, zipcode, minYear, maxYear)
+
+@app.post("/load/zip/{zipcode}/years/{minYear}-{maxYear}")
+async def df_cache(zipcode: str, minYear: int, maxYear: int):
+    pull_data(zipcode, minYear, maxYear)
+
+@app.get('/viz/zip/{zipcode}/years/{minYear}-{maxYear}/var/{variable}')
+async def viz(zipcode: str, minYear: int, maxYear: int, variable: str):
+    df, year_len = pull_data(zipcode, minYear, maxYear)
+    plot_html = main.execute_viz(df, year_len, variable)
     return HTMLResponse(content=plot_html)
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
 
+# Fix housing value >million bug
 # Move variable and CSV selection to page
 # Export CSV functionality
 # Loading view
 # Pretty with CSS
+# upload to Render
