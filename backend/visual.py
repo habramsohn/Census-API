@@ -33,9 +33,7 @@ def new_bar(plot, new_df, var, yaxis):
 def visualize(arg, year_len, new_df): 
 
     data = {
-        "housing": [{"var": "households by type, total households", "yaxis": "Total Households"},
-                    {"var": "households by type, average family size", "yaxis": "Average Family Size"},
-                    {"var": "relationship, population in households", "yaxis": "Total Population"}],
+        "population": [{"var": "relationship, population in households", "yaxis": "Total Population"}],
 
         "education": [{"var": "educational attainment, high school graduate (includes equivalency)", "yaxis": "High School", "title": "Educational Attainment"},
         	        {"var": "educational attainment, associate's degree", "yaxis": "Associate's Degree"},

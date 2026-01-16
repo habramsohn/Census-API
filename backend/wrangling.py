@@ -1,10 +1,7 @@
 # Reduce df to user-selected variable groups
 def selection(arg):
     options = {
-         'housing': ["households by type, total households", 
-            "households by type, average household size",	
-            "households by type, average family size",	
-            "relationship, population in households"],
+        'population': ["relationship, population in households"],
         'education': ["educational attainment, high school graduate (includes equivalency)",
         	"educational attainment, associate's degree",
             "educational attainment, bachelor's degree",
