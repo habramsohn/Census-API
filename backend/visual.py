@@ -97,7 +97,7 @@ def visualize(arg, year_len, new_df):
                 {"var": "sex and age, 85 years and over", "yaxis": ">85"}]        
     }
 
-    singles = ["housing"]
+    singles = ["population"]
     collated = ["education", "origin", "language", "employment", "occupation", "industry", "income", "vacancy", "house_value", "gender", "age"]
 
     if year_len > 1:
