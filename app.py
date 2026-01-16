@@ -23,7 +23,7 @@ def pull_data(api_key, zipcode: str, minYear: int, maxYear: int):
     return main.execute_df(api_key, zipcode, minYear, maxYear)
 
 @app.post("/load/zip/{zipcode}/years/{minYear}-{maxYear}")
-async def df_cache(api_key, zipcode: str, minYear: int, maxYear: int):
+async def df_cache(zipcode: str, minYear: int, maxYear: int):
     pull_data(api_key, zipcode, minYear, maxYear)
 
 @app.get('/viz/zip/{zipcode}/years/{minYear}-{maxYear}/var/{variable}')
@@ -35,6 +35,8 @@ async def viz(zipcode: str, minYear: int, maxYear: int, variable: str):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     uvicorn.run("app:app", host="0.0.0.0", port=port)
+    # Local testing
+    # uvicorn.run("app:app", host="127.0.0.1", port=8000)
 
 # Fix housing value >million bug
 # Move variable and CSV selection to page
