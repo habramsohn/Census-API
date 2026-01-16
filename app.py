@@ -19,16 +19,16 @@ async def get_landing(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @lru_cache(maxsize=32)
-def pull_data(zipcode: str, minYear: int, maxYear: int):
+def pull_data(api_key, zipcode: str, minYear: int, maxYear: int):
     return main.execute_df(api_key, zipcode, minYear, maxYear)
 
 @app.post("/load/zip/{zipcode}/years/{minYear}-{maxYear}")
-async def df_cache(zipcode: str, minYear: int, maxYear: int):
-    pull_data(zipcode, minYear, maxYear)
+async def df_cache(api_key, zipcode: str, minYear: int, maxYear: int):
+    pull_data(api_key, zipcode, minYear, maxYear)
 
 @app.get('/viz/zip/{zipcode}/years/{minYear}-{maxYear}/var/{variable}')
 async def viz(zipcode: str, minYear: int, maxYear: int, variable: str):
-    df, year_len = pull_data(zipcode, minYear, maxYear)
+    df, year_len = pull_data(api_key, zipcode, minYear, maxYear)
     plot_html = main.execute_viz(df, year_len, variable)
     return HTMLResponse(content=plot_html)
 
