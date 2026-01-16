@@ -10,9 +10,9 @@ import os
 api_key = os.environ.get('API_KEY')
 
 app = FastAPI()
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="templates")
 
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def get_landing(request: Request):
