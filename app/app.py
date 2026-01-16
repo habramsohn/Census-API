@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 from backend import main
 from functools import lru_cache
+import os
 
 api_key = os.environ.get('API_KEY')
 
