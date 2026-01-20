@@ -52,8 +52,3 @@ if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=port)
     # Local testing
     #uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
-
-# Labels and color-blind friendly pallette on graphs
-# Loading view
-# Pretty with CSS
-# upload to Render
