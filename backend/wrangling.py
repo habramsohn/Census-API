@@ -1,6 +1,4 @@
-# Reduce df to user-selected variable groups
-def selection(arg):
-    options = {
+options = {
         'population': ["relationship, population in households"],
         'education': ["educational attainment, high school graduate (includes equivalency)",
         	"educational attainment, associate's degree",
@@ -40,7 +38,8 @@ def selection(arg):
             "value, $150,000 to $199,999",
             "value, $200,000 to $299,999",
             "value, $300,000 to $499,999",
-            "value, $500,000 to $999,999"],
+            "value, $500,000 to $999,999",
+            "value, $1,000,000 or more"],
         'age': ["sex and age, under 5 years",
             "sex and age, 5 to 9 years",
             "sex and age, 10 to 14 years",
@@ -54,20 +53,22 @@ def selection(arg):
             "sex and age, 65 to 74 years",
             "sex and age, 75 to 84 years",
             "sex and age, 85 years and over"]}
-    selected = options[arg]
-    csv = list(i for l in options.values() for i in l)
-    return selected, csv
 
-def wrangle(df, selected, csv):
-    new_df = df[selected]
-    new_df.index.name = "year"
-    export_df = df[csv]
-    return new_df, export_df
+def selection(arg):
+    selected = options[arg]
+    return selected
 
 def wrun(df, arg):
-    selected, csv = selection(arg)
-    new_df, export_df = wrangle(df, selected, csv)
-    return new_df, export_df
+    selected = selection(arg)
+    new_df = df[selected]
+    new_df.index.name = "year"
+    return new_df
+
+def wrangle_csv(df):
+    csv = list(i for l in options.values() for i in l)
+    export_df = df[csv]
+    return export_df
 
 if __name__ == "__main__":
-    wrun()
+    new_df = wrun()
+    export_df = wrangle_csv()

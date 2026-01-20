@@ -19,7 +19,7 @@ def bar(new_df, var, yaxis, title = None):
     if title == None:
         title = yaxis
     year = new_df.index[0]
-    plot = px.bar(data_frame = new_df, x = new_df.index, y = var, title = f"{title} in {year}")
+    plot = px.bar(data_frame = new_df, x = new_df.index, y = var, title = f"{title} in {year}", color_continuous_scale = "Viridis")
     plot.update_traces(width = 0.4, opacity = 0.8, showlegend = True, name = yaxis)
     plot.update_layout(xaxis = dict(type = 'category', tickmode = 'array'), yaxis_title = title, xaxis_title = "Year", barmode = "group")
     return plot
@@ -33,7 +33,7 @@ def new_bar(plot, new_df, var, yaxis):
 def visualize(arg, year_len, new_df): 
 
     data = {
-        "population": [{"var": "relationship, population in households", "yaxis": "Total Population"}],
+        "population": [{"var": "relationship, population in households", "yaxis": "Total Population", "title": "Total Population"}],
 
         "education": [{"var": "educational attainment, high school graduate (includes equivalency)", "yaxis": "High School", "title": "Educational Attainment"},
         	        {"var": "educational attainment, associate's degree", "yaxis": "Associate's Degree"},
@@ -94,48 +94,29 @@ def visualize(arg, year_len, new_df):
                 {"var": "sex and age, 60 to 64 years", "yaxis": "60-64"},
                 {"var": "sex and age, 65 to 74 years", "yaxis": "65-74"},
                 {"var": "sex and age, 75 to 84 years", "yaxis": "75-84"},
-                {"var": "sex and age, 85 years and over", "yaxis": ">85"}]        
+                {"var": "sex and age, 85 years and over", "yaxis": ">84"}]        
     }
 
-    singles = ["population"]
-    collated = ["education", "origin", "language", "employment", "occupation", "industry", "income", "vacancy", "house_value", "gender", "age"]
-
     if year_len > 1:
-        if arg in singles:
-            for i in data[arg]:
-                var = i.get("var", None)
-                yaxis = i.get("yaxis", None)
-                title = i.get("title", None)
+        for i in data[arg]:
+            var = i.get("var", None)
+            yaxis = i.get("yaxis", None)
+            title = i.get("title", None)
+            if title != None:
                 plot = line(new_df, var, yaxis, title)
-                plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
-        elif arg in collated:
-            for i in data[arg]:
-                var = i.get("var", None)
-                yaxis = i.get("yaxis", None)
-                title = i.get("title", None)
-                if title != None:
-                    plot = line(new_df, var, yaxis, title)
-                else:
-                    plot = new_line(plot, new_df, var, yaxis)
-            plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
+            else:
+                plot = new_line(plot, new_df, var, yaxis)
+        plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
     else:
-        if arg in singles:
-            for i in data[arg]:
-                var = i.get("var", None)
-                yaxis = i.get("yaxis", None)
-                title = i.get("title", None)
-                plot = bar(new_df, var, yaxis)
-                plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
-        elif arg in collated:
-            for i in data[arg]:
-                var = i.get("var", None)
-                yaxis = i.get("yaxis", None)
-                title = i.get("title", None)
-                if title != None:
-                    plot = bar(new_df, var, yaxis, title)
-                else: 
-                    plot = new_bar(plot, new_df, var, yaxis)
-            plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
+        for i in data[arg]:
+            var = i.get("var", None)
+            yaxis = i.get("yaxis", None)
+            title = i.get("title", None)
+            if title != None:
+                plot = bar(new_df, var, yaxis, title)
+            else: 
+                plot = new_bar(plot, new_df, var, yaxis)
+        plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
     return plot_html
 
 if __name__ == "__main__":

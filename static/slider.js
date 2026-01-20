@@ -8,7 +8,11 @@ const slider = document.getElementById("slider");
       },
       step: 1,
       pips: {
-        mode: 'steps'
+        mode: 'steps',
+        density: -1,
+        filter: function(value, type) {
+            return 1;
+        },
       },
       format: {
         to: value => Math.round(value),

@@ -13,12 +13,13 @@
   </head>
 
   <body>
-    <h1>Pick zipcode and year range</h1>
+    <h1>Enter zipcode and timespan</h1>
     <label for="zipcode">Zipcode: </label>
     <input type="text" id="zipcode" name="zipcode"/>      
     <div id="slider" name="slider"></div> 
-    <button id="zipyear" type="submit">Submit Zipyear</button>
-    <select name="vars" id="vars">
+    <button id="zipyear" type="submit">Pull Data</button>
+    <h1 id="loading" hidden>Loading...</h1>
+    <select name="vars" id="vars" hidden>
       <option value="population">Population</option>
       <option value="education">Education</option>
       <option value="origin">Origin</option>
@@ -30,7 +31,9 @@
       <option value="house_value">House Value</option>
       <option value="age">Age</option>
     </select>
-    <button id="viz" type="button">viz</button>
+    <button id="viz" type="button" hidden>Visualize</button>
+    <button id="export_csv" hidden>Export CSV</button>
+    
 
   <script src="{{ url_for('static', path='/slider.js') }}"></script>
   <script src="{{ url_for('static', path='/input.js') }}"></script>

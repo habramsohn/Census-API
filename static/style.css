@@ -1,16 +1,109 @@
+/* Generated with Gemini*/
+/* 1. Base Setup */
+body {
+    background-color: #2e1065; /* Deep, pleasing purple */
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers everything horizontally */
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* 2. Layout & Spacing */
+/* Vertical outlay with sufficient space between elements */
+input, select, button {
+    margin-bottom: 25px; 
+    width: 100%;
+    max-width: 400px; /* Ensures items don't get too wide on desktop */
+    box-sizing: border-box;
+}
+
+/* 3. Input & Select Styling */
+input, select {
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    font-size: 16px;
+}
+
+select {
+    text-align-last: center;
+}
+
+/* 4. Large, Rounded Buttons */
+button {
+    padding: 15px 25px;
+    border-radius: 50px; /* Fully rounded sides */
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+    transition: transform 0.2s, background-color 0.2s;
+    background-color: #0ea5e9; /* Light blue to match slider */
+    color: white;
+}
+
+button:hover {
+    background-color: #38bdf8;
+    transform: scale(1.02); /* Slight pop on hover */
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Specific styling for the Export button to differentiate it */
+#export_csv {
+    background-color: #a855f7; /* Lighter purple/magenta */
+}
+
+#export_csv:hover {
+    background-color: #c084fc;
+}
+
+/* 5. Slider Specifics */
 #slider {
-    margin: 50px
+    text-align: center;
+    text-align-last: center; /* Required for some browsers */
+    appearance: none; /* Removes default arrow to help centering in some views */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="gray"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    width: 66%; 
+    margin-top: 10px;
+    margin-bottom: 80px; /* Extra space for the slider handles */
 }
 
-#vars {
-    position: relative;
-    z-index: 1000 !important;
+/* Ensure noUiSlider colors feel cohesive */
+.noUi-connect {
+    background: #0ea5e9; /* Matches buttons */
 }
 
-.button {
-    margin: 100
+label[for="zipcode"] {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
-#viz, #zipyear {
-    display: block
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+    
+    button {
+        width: 100%; /* Full width buttons on mobile for easier tapping */
+    }
+
+    #slider {
+        width: 80%; /* Slightly wider on mobile for thumb precision */
+    }
 }

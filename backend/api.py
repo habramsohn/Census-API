@@ -27,10 +27,9 @@ def api_fun(api_key, year, zipcode, vars, results):
         x = "00"
     for dp in DPs:
         url = f"https://api.census.gov/data/{year}/acs/acs5/profile?get=group({dp})&ucgid=860{x}00US{zipcode}&key={api_key}"
-        print(url)
         temp = dp_fun(url, vars, year, temp)                                                                    
     results.append(pd.DataFrame(temp, index = [year]))
-    print(f"{year} complete!")
+    print(f"{year} complete")
     return results
     
 def dp_fun(url, vars, year, temp):
