@@ -1,7 +1,8 @@
 const zipyear = document.getElementById('zipyear');
 const export_csv = document.getElementById('export_csv');
+const vars = document.getElementById('vars');
 const viz = document.getElementById('viz');
-const loading = document.getElementById('loading')
+const loading = document.getElementById('loading');
 
 zipyear.addEventListener('click', async function (e) { 
     e.preventDefault();
@@ -25,6 +26,7 @@ zipyear.addEventListener('click', async function (e) {
         await fetch(url, { method: 'POST' });
         loading.hidden = true
 
+        vars.hidden = false;
         export_csv.hidden = false;
         viz.hidden = false;
 
