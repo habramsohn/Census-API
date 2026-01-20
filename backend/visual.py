@@ -73,7 +73,7 @@ def visualize(arg, year_len, new_df):
         "vacancy": [{"var": "housing occupancy, occupied housing units", "yaxis": "Occupied Units", "title": "Housing Vacancy"},
                 {"var": "housing occupancy, vacant housing units", "yaxis": "Vacant Units"}],
 
-        "house_value": [{"var": "value, less than $50,000", "yaxis": "<$50,000", "title": "House Value in USD"},
+        "house_value": [{"var": "value, less than $50,000", "yaxis": "<$50,000", "title": "Number of Houses per Value"},
                 {"var": "value, $50,000 to $99,999", "yaxis": "$50-90,000"},
                 {"var": "value, $100,000 to $149,999", "yaxis": "$100-149,999"},
                 {"var": "value, $150,000 to $199,999", "yaxis": "$150-199,999"},
