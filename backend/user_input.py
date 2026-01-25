@@ -8,5 +8,4 @@ def basic_input(zipcode, min_year, max_year):
     return zipcode, years, year_len
 
 if __name__ == "__main__":
-    user_input()
-    csv_check()
+    basic_input()
