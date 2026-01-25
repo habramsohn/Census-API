@@ -9,7 +9,8 @@ from functools import lru_cache
 import os
 import io
 
-api_key = os.environ.get('API_KEY')
+#api_key = os.environ.get('API_KEY')
+api_key = "915657d4de9518c7ed7dc042dd08050606fa1492"
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")

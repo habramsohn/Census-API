@@ -30,6 +30,12 @@ zipyear.addEventListener('click', async function (e) {
         export_csv.hidden = false;
         viz.hidden = false;
 
+        slider.noUiSlider.on('slide', () => {
+            vars.hidden = true;
+            export_csv.hidden = true;
+            viz.hidden = true;
+        })
+
         export_csv.addEventListener('click', async function (e) {
             e.preventDefault();
 
@@ -55,6 +61,3 @@ zipyear.addEventListener('click', async function (e) {
         alert(error.message)
     }
 })
-
-
-    

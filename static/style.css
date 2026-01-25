@@ -73,10 +73,6 @@ button:active {
 #slider {
     text-align: center;
     text-align-last: center; /* Required for some browsers */
-    appearance: none; /* Removes default arrow to help centering in some views */
-    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="gray"><path d="M7 10l5 5 5-5z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
     width: 66%; 
     margin-top: 30px;
     margin-bottom: 80px; /* Extra space for the slider handles */
