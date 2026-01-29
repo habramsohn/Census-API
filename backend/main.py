@@ -19,5 +19,5 @@ def execute_viz(df, year_len, arg="income"):
 
 # Export all pulled data if requested
 def export_csv(df):
-    export_df = wrangling.wrangle_csv(df)
+    export_df = wrangling.wrangle_csv(df, data)
     return export_df

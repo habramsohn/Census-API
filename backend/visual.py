@@ -47,23 +47,24 @@ def visualize(arg, year_len, new_df, data):
     if year_len > 1:
         # Variables with tags
         if any("tag" in x for x in data[arg]):
+            # Bucket to define groups later
             tags = []
             
+            # Rename variables (columns) with the same tag to identical names
             for i in data[arg]:
                 if "title" in i:
                     title = i.get("title")
                 var = i.get("var", None)
                 tag = i.get("tag")
                 new_df.rename(columns={var:tag}, inplace=True)
+                # Build bucket of unique tag groups
                 if tag not in tags:
                     tags.append(tag)
 
-            for tag in tags:
-                if (new_df.columns == tag).sum() > 1:
-                    values = new_df[tag].sum(axis=1)
-                    new_df = new_df.drop(columns=tag)
-                    new_df[tag] = values
-            new_df = new_df.loc[:, ~new_df.columns.duplicated(keep="first")]
+            # Sum all identified tag groups and compress into one column per
+            new_df = new_df.groupby(level=0, axis=1).sum()
+            
+            # Pass unique tag groups into generated plot
             for z, tag in enumerate(tags):
                 yaxis = tag
                 var = tags[z]
@@ -71,6 +72,7 @@ def visualize(arg, year_len, new_df, data):
                     plot = line(new_df, var, yaxis, title)
                 else:
                     plot = new_line(plot, new_df, var, yaxis)
+                    
             plot_html = plot.to_html(full_html=False, include_plotlyjs='cdn',div_id=None)
         
         # Variables without tags

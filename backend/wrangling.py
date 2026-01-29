@@ -10,7 +10,7 @@ def wrun(df, arg, data):
     return new_df
 
 
-def wrangle_csv(df):
-    csv = list(i for l in options.values() for i in l)
+def wrangle_csv(df, data):
+    csv = list(i.get("var", None) for l in data.values() for i in l)
     export_df = df[csv]
     return export_df
