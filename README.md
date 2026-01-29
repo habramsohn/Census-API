@@ -1,7 +1,5 @@
 Uploaded on Render: https://census-api-wgyi.onrender.com/
 
-Note: If using a mobile device, try landscape mode. 
-
 This Census API project allows users to enter a zipcode and a year, or a range of years, and visualize various statistics related to human geography. A single year is rendered as a bar graph, while ranges of years are rendered as time-series line graphs. Additionally, users may download a .csv file with the tabulated data. This API is more user-friendly than manually pulling and aligning Census numbers. 
 
 INSTRUCTIONS:
@@ -22,8 +20,4 @@ harrisonabramsohn@gmail.com
 
 Future updates:
 
-- Error handling
 - Update bar graph color scales to color-blind friendly 
-- Group busier line graphs into easier-to-parse sets
-- Add variables as needed
-- Fix UI on mobile portrait 
