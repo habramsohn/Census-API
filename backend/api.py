@@ -1,25 +1,33 @@
 import pandas as pd
 import requests
 import json
-import itertools
 
+
+# Exclude all irrelevant variables - Puerto Rican, Margin of Error, Percentage, etc. 
 def include_fun(var):
     cond_one = len(var.split("_")) > 1
     if cond_one:
-        cond_two = all(w not in var.split("_")[1] for w in ["M","P","A","ID"]) and "PR" not in var.split("_")[0]
+        cond_two = (
+            all(w not in var.split("_")[1] for w in ["M", "P", "A", "ID"])
+            and "PR" not in var.split("_")[0]
+        )
         if cond_two:
             return True
     else:
         return False
 
+
+# Read static variables.json to get basic template applied across all  requested years
 def variables_fun():
-    with open('variables.json', 'r') as file:
+    with open("variables.json", "r") as file:
         variables = json.load(file)
     variables = variables["variables"]
     return variables
 
+
+# Send API request to api.census.gov with dynamic URL 
 def api_fun(api_key, year, zipcode, vars, results):
-    DPs = ["DP02","DP03","DP04","DP05"]
+    DPs = ["DP02", "DP03", "DP04", "DP05"]
     temp = {}
     if year > 2020:
         x = "Z2"
@@ -27,26 +35,34 @@ def api_fun(api_key, year, zipcode, vars, results):
         x = "00"
     for dp in DPs:
         url = f"https://api.census.gov/data/{year}/acs/acs5/profile?get=group({dp})&ucgid=860{x}00US{zipcode}&key={api_key}"
-        temp = dp_fun(url, vars, year, temp)                                                                    
-    results.append(pd.DataFrame(temp, index = [year]))
+        temp = dp_fun(url, vars, year, temp)
+    results.append(pd.DataFrame(temp, index=[year]))
     print(f"{year} complete")
     return results
-    
+
+
+# Parse JSON response from servier and apply mutation logic
 def dp_fun(url, vars, year, temp):
     response = requests.get(url)
-    zipped = zip(response.json()[0],response.json()[1])
+    zipped = zip(response.json()[0], response.json()[1])
     for var, stat in zipped:
         if var in vars:
+            # Get mutate dictionary with needed adjustments
             mutate = mutate_fun(year, var)
+            # Find adjusted variable in mutate dictionary
             key = mutate.get(var, var)
+            # Replace adjusted variable with updated statistic
             temp[key] = max(0, float(stat))
     return temp
 
+
+# Analyze passed variables and adjust name endings if rule applies
 def mutate_fun(year, var):
     mutate = {}
     pref = var.split("_")[0]
     num = int(var.split("_")[1].split("E")[0])
     dec = var.split("_")[1].split("E")[0]
+    # Certain years and data profiles (DP0X) have recorded changes in variable names; encoded below
     rules = {
         (2014, "DP04", 24): 1,
         (2016, "DP05", 4): 1,
@@ -58,24 +74,29 @@ def mutate_fun(year, var):
         (2018, "DP02", 24): 1,
         (2019, "DP02", 85): 2,
     }
-    for rule, offset in rules.items(): 
+    for rule, offset in rules.items():
         if year > rule[0] and pref == rule[1] and num > rule[2]:
             mutate[var] = var.replace(str(dec), str(f"{int(dec)-offset:04d}"))
     return mutate
 
+
+# Give variable labels human-readable names from variables.json
 def rename_fun(df, variables):
-    mapping = {name: var["label"].split("!!",1)[1].lower().replace("!!",", ") for name, var in variables.items() if name in df.columns}
+    mapping = {
+        name: var["label"].split("!!", 1)[1].lower().replace("!!", ", ")
+        for name, var in variables.items()
+        if name in df.columns
+    }
     df.rename(columns=mapping, inplace=True)
 
+
+# Assemble DataFrame using above functionality 
 def main_fun(api_key, zipcode, years):
     results = []
     variables = variables_fun()
     vars = []
     [vars.append(var) for var in variables if include_fun(var) == True]
     [api_fun(api_key, year, zipcode, vars, results) for year in years]
-    df = pd.concat(results, axis = 0)
+    df = pd.concat(results, axis=0)
     rename_fun(df, variables)
     return df
-
-if __name__ == "__main__":
-    main_fun()
