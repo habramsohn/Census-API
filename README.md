@@ -20,8 +20,4 @@ harrisonabramsohn@gmail.com
 
 Future updates:
 
-- Error handling
 - Update bar graph color scales to color-blind friendly 
-- Group busier line graphs into easier-to-parse sets
-- Add variables as needed
-- Fix UI on mobile portrait 
