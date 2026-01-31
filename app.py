@@ -10,7 +10,8 @@ import os
 import io
 
 # API contained in Render
-api_key = os.environ.get("API_KEY")
+api_key = "915657d4de9518c7ed7dc042dd08050606fa1492"
+#os.environ.get("API_KEY")
 
 # FastAPI connecting backend and HTML/JS
 app = FastAPI()
@@ -62,7 +63,7 @@ async def viz(zipcode: str, minYear: int, maxYear: int, variable: str):
 
 # Uvicorn as agent to host on Render
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    uvicorn.run("app:app", host="0.0.0.0", port=port)
+    #port = int(os.environ.get("PORT", 10000))
+    #uvicorn.run("app:app", host="0.0.0.0", port=port)
     # Local testing
-    #uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
