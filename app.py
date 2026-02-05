@@ -10,8 +10,7 @@ import os
 import io
 
 # API contained in Render
-api_key = "915657d4de9518c7ed7dc042dd08050606fa1492"
-#os.environ.get("API_KEY")
+api_key = os.environ.get("API_KEY")
 
 # FastAPI connecting backend and HTML/JS
 app = FastAPI()
