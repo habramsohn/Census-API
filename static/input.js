@@ -1,12 +1,26 @@
 const zipyear = document.getElementById('zipyear');
+const entry = document.getElementById('zipcode')
 const export_csv = document.getElementById('export_csv');
 const vars = document.getElementById('vars');
 const viz = document.getElementById('viz');
 const loading = document.getElementById('loading');
 
-zipyear.addEventListener('click', async function (e) { 
-    e.preventDefault();
 
+zipyear.addEventListener('click', function (e) { 
+    e.preventDefault();
+    execute()
+})
+
+
+entry.addEventListener('keydown', function (e) {
+    e.preventDefault();
+    if (e.key === "Enter") {
+        execute()
+    }
+})
+
+
+async function execute() {
     try{
         var zipcode = document.getElementById("zipcode").value;
 
@@ -60,4 +74,4 @@ zipyear.addEventListener('click', async function (e) {
     } catch (error) {
         alert(error.message)
     }
-})
+}
