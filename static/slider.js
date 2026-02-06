@@ -1,10 +1,10 @@
 const slider = document.getElementById("slider");
     noUiSlider.create(slider, {
-      start: [2011, 2023],      
+      start: [2011, 2024],      
       connect: true,
       range: {
         min: 2011,
-        max: 2023
+        max: 2024
       },
       step: 1,
       format: {

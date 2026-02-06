@@ -59,10 +59,10 @@ def visualize(arg, year_len, new_df, data):
                 new_df.rename(columns={var:tag}, inplace=True)
                 # Build bucket of unique tag groups
                 if tag not in tags:
-                    tags.append(tag)
+                   tags.append(tag)
 
             # Sum all identified tag groups and compress into one column per
-            new_df = new_df.groupby(level=0, axis=1).sum()
+            new_df = new_df.T.groupby(level=0).sum().T
             
             # Pass unique tag groups into generated plot
             for z, tag in enumerate(tags):
