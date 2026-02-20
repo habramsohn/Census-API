@@ -8,6 +8,9 @@ from backend import main
 from functools import lru_cache
 import os
 import io
+from backend import info
+
+data = info.data
 
 # API contained in Render
 api_key = os.environ.get("API_KEY")
@@ -27,21 +30,22 @@ async def get_landing(request: Request):
 
 # Generate cache when dataset requested to prevent reloading
 @lru_cache(maxsize=32)
-def pull_data(api_key, zipcode: str, minYear: int, maxYear: int):
+def pull_data(zipcode: str, minYear: int, maxYear: int):
+    global api_key
     return main.execute_df(api_key, zipcode, minYear, maxYear)
 
 
 # Trigger API call when URL passed
 @app.post("/load/zip/{zipcode}/years/{minYear}-{maxYear}")
 async def df_cache(zipcode: str, minYear: int, maxYear: int):
-    pull_data(api_key, zipcode, minYear, maxYear)
+    pull_data(zipcode, minYear, maxYear)
 
 
 # Generate CSV when export requested
-@app.get("/load/zip/{zipcode}/years/{minYear}-{maxYear}/export")
+@app.get("/export/zip/{zipcode}/years/{minYear}-{maxYear}")
 async def export_csv(zipcode: str, minYear: int, maxYear: int):
-    df, year_len = pull_data(api_key, zipcode, minYear, maxYear)
-    export_df = main.export_csv(df)
+    df, year_len = pull_data(str(zipcode), int(minYear), int(maxYear))
+    export_df = main.export_csv(df, data)
     # Use io package to stream dynamic data based on URL
     stream = io.StringIO()
     export_df.to_csv(stream, index=True)
@@ -54,7 +58,7 @@ async def export_csv(zipcode: str, minYear: int, maxYear: int):
 # Pull visualization logic with requested variable through custom URL 
 @app.get("/viz/zip/{zipcode}/years/{minYear}-{maxYear}/var/{variable}")
 async def viz(zipcode: str, minYear: int, maxYear: int, variable: str):
-    df, year_len = pull_data(api_key, zipcode, minYear, maxYear)
+    df, year_len = pull_data(zipcode, minYear, maxYear)
     # See backend/main.py
     plot_html = main.execute_viz(df, year_len, variable)
     return HTMLResponse(content=plot_html)

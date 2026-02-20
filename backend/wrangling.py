@@ -11,6 +11,8 @@ def wrun(df, arg, data):
 
 
 def wrangle_csv(df, data):
-    csv = list(i.get("var", None) for l in data.values() for i in l)
+    csv = [i.get("var", None) for l in data.values() for i in l]
+    csv = [col for col in csv if col is not None]  # Filter out None values
     export_df = df[csv]
+    export_df.index.name = "year"
     return export_df

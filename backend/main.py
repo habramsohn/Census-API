@@ -1,9 +1,10 @@
-from backend import api, info, user_input, visual, wrangling
+from backend import api, user_input, visual, wrangling, info
+
 data = info.data
 
 # Use user input to request data from Census website
 def execute_df(api_key, zipcode="23185", min_year=2021, max_year=2022):
-    # User input - Get requested zip, year range, and desire for CSV export
+    # User input - Get requested zip, year range
     zipcode, years, year_len = user_input.basic_input(zipcode, min_year, max_year)
     # API
     df = api.main_fun(api_key, zipcode, years)
@@ -18,6 +19,6 @@ def execute_viz(df, year_len, arg="income"):
 
 
 # Export all pulled data if requested
-def export_csv(df):
+def export_csv(df, data):
     export_df = wrangling.wrangle_csv(df, data)
     return export_df

@@ -42,6 +42,32 @@ async function execute() {
         export_csv.hidden = false;
         viz.hidden = false;
 
+        slider.noUiSlider.on('slide', () => {
+            vars.hidden = true;
+            export_csv.hidden = true;
+            viz.hidden = true;
+        })
+
+        export_csv.addEventListener('click', async function (e) {
+            e.preventDefault();
+
+            var url = `/export/zip/${zipValue}/years/${minYear}-${maxYear}`;
+
+            window.location.href = url;
+        })
+
+        viz.addEventListener('click', function (e) {
+            e.preventDefault();
+            var slider = document.getElementById("slider");
+            var range = slider.noUiSlider.get();
+            var minYear = range[0]
+            var maxYear = range[1]
+            var variable = document.getElementById("vars").value;
+
+            var url = `/viz/zip/${zipValue}/years/${minYear}-${maxYear}/var/${variable}`;
+            window.open(url, '_blank');
+        })
+
     } catch (error) {
         alert(error.message);
     }
