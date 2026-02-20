@@ -6,7 +6,6 @@ from fastapi.responses import StreamingResponse
 import uvicorn
 from backend import main
 from functools import lru_cache
-import os
 import io
 
 # API contained in Render
