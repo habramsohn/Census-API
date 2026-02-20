@@ -12,6 +12,8 @@ The data is pulled from the U.S. Census Bureau's 5-year ACS Surveys. All numbers
 4. Repeat step 3 with the same zipcode and range of years to instantly view other statistic.
 5. Click "Export CSV" to download a spreadsheet of the requested data, including all visualizable statistics plus some extras.
 
+Note: If unable to type, try clearing your cache or opening the site in an incognito window.
+
 Although this project was primarily intended as a portfolio showcase and educational venture, if this tool ends up being useful to you in some way, I am open to adding additional statistic based on demand - there are many more available in the survey. 
 
 Inquiries welcome at:
